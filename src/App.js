@@ -1,11 +1,10 @@
 import './App.css';
-import TskDialogue from './components/dialogueTree';
-import ChoiceButtons from './components/choiceButtons';
+import TextHandler from './components/TextHandler';
 
 function App() {
   return (
     <div className="App">
-      <ChoiceButtons />
+      <TextHandler />
     </div>
   );
 }
