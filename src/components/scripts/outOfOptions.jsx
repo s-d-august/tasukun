@@ -5,12 +5,12 @@ const outOfOptions = [
         ],
         choices: [
             {
-                choice: "Yep!",
-                moveFlag: "move"
+                choice: "Can you go back a bit?",
+                reset: "true"
             },
             {
-                choice: "Not today.",
-                moveFlag: "nomove"
+                choice: "Back to the drawing board, I guess.",
+                jump: "main"
             }
         ]
     },

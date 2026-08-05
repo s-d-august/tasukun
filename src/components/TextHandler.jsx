@@ -7,13 +7,18 @@ import lists from "./lists/listsCompiled.jsx"
 
 const TextHandler = () => {
 
+    const [currentlyDoing, setCurrentlyDoing] = useState()
+    // If the user has set they're currently doing something
+
     const [moveType, setMoveType] = useState("move")
-    // Whether the user feels like doing something active (options: move, nomove)
-    const [chosenAct, setChosenAct] = useState()
+    // Whether the user feels like doing something active (options: move, nomove, listen)
+    const [suggestedAct, setSuggestedAct] = useState()
     // The currently suggested activity
 
     const [currentScript, setCurrentScript] = useState(scripts.suggestActivity)
     // The script currently being read from
+    const scriptsHistory = useRef([scripts.suggestActivity])
+    // History of read scripts, most recent first
     const [displayChoices, setDisplayChoices] = useState(scripts.suggestActivity[0].choices)
     // The user choices currently being displayed
     const [currentLine, setCurrentLine] = useState(0)
@@ -27,6 +32,8 @@ const TextHandler = () => {
     useEffect(() => {
         setDisplayChoices(currentScript[0].choices)
         setCurrentLine(0)
+        console.log(scriptsHistory.current)
+        scriptsHistory.current = [currentScript, ...scriptsHistory.current]
     }, [currentScript])
 
     useEffect(() => {
@@ -41,12 +48,12 @@ const TextHandler = () => {
         var now = currentScript[currentLine]
         var toChange
         if (now.change) {
-            if (now.change === "chosenAct") {
-                if (chosenAct === undefined) {
+            if (now.change === "suggestedAct") {
+                if (suggestedAct === undefined) {
                     toChange = randomAct(moveType)
-                    setChosenAct(toChange)
+                    setSuggestedAct(toChange)
                 } else {
-                    toChange = chosenAct
+                    toChange = suggestedAct
                 }
             }
             fullLine = now.lines[0] + toChange + now.lines[1]
@@ -54,7 +61,7 @@ const TextHandler = () => {
             fullLine = now.lines[0]
         }
         setDisplayLine(fullLine);
-    }, [currentLine, chosenAct, currentScript, moveType])
+    }, [currentLine, suggestedAct, currentScript, moveType])
 
 
     function randomAct(flag) {
@@ -62,52 +69,84 @@ const TextHandler = () => {
         return optionsArray.current.pop()
     }
 
+    function filterObject(obj) {
+        return (typeof obj !== "string")
+    }
+
     function choiceDisplay(choices) {
-        return choices.map((el, index) => (
-            <Button
-                key={index}
-                data-moveflag={el.moveFlag}
-                data-actflag={el.actFlag}
-                data-loop={el.loop}
-                data-jump={el.jump}
-                data-script={el.script}
-                onClick={clickHandler}>
-                {el.choice}
-            </Button>
-        ));
+        const jumpTarget =
+            choices.includes("suggestionsReader")
+                ? "suggestionsReader"
+                : null
+
+        const choicesClean = choices.filter(filterObject).map((el, index) => {
+
+            return (
+                <Button
+                    key={index}
+                    data-moveflag={el.moveFlag}
+                    data-actflag={el.actFlag}
+                    data-loop={el.loop}
+                    data-jump={el.jump ? el.jump : jumpTarget}
+                    data-reset={el.reset}
+                    onClick={clickHandler}>
+                    {el.choice}
+                </Button>
+            );
+        });
+
+        return choicesClean;
+    }
+
+    function scriptJump(jump) {
+        if (scripts[jump]) {
+            setCurrentScript(scripts[jump]);
+            setDisplayChoices(scripts[jump][0].choices);
+            setCurrentLine(0);
+        } else console.log(jump, "Script not found!")
     }
 
     function clickHandler(event) {
-        const { moveflag, actflag, loop, jump, script } = event.currentTarget.dataset;
+        const { moveflag, actflag, loop, jump, reset } = event.currentTarget.dataset;
 
         if (moveflag) {
             setMoveType(moveflag)
         }
 
-        if (actflag === "chosenAct") {
-            setChosenAct(chosenAct);
+        if (currentlyDoing) {
+            if (currentlyDoing === "false") {
+                setCurrentlyDoing(null)
+            } else setCurrentlyDoing(suggestedAct);
         }
 
-        if (script && scripts[script]) {
-            setCurrentScript(scripts[script]);
-            setDisplayChoices(scripts[script][0].choices);
-            setCurrentLine(0);
+        if (reset) {
+            setCurrentScript(scriptsHistory.current[0])
         }
 
         if (!loop) {
-            const nextLine = currentLine + 1;
-            setCurrentLine(nextLine);
-            setDisplayChoices(currentScript[nextLine].choices);
+            if (jump) {
+                scriptJump(jump)
+            } else {
+                const nextLine = currentLine + 1;
+                if (!currentScript[nextLine]) {
+                    console.log(currentScript, "Line not found!")
+                    return
+                }
+                setCurrentLine(nextLine);
+                setDisplayChoices(currentScript[nextLine].choices);
+            }
+
         }
-        if (loop === 'chosenAct') {
+
+        if (loop === 'suggestedAct') {
             var act = randomAct(moveType)
 
             var now = currentScript[currentLine]
             console.log(act, now)
             if (act) {
-                setChosenAct(act)
+                setSuggestedAct(act)
             } else if (!act && now.jump) {
-                console.log("nojump")
+                scriptJump(now.jump)
             }
 
         }

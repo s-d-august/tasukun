@@ -4,6 +4,7 @@ const suggestActivity = [
             "Of course! Do you feel like moving your body?"
         ],
         choices: [
+            "suggestionsReader",
             {
                 choice: "Yep!",
                 moveFlag: "move"
@@ -11,30 +12,11 @@ const suggestActivity = [
             {
                 choice: "Not today.",
                 moveFlag: "nomove"
+            },
+            {
+                choice: "Actually, I need something to listen to.",
+                moveFlag: "listen"
             }
-        ]
-    },
-    {
-        lines: [
-            `In that case, how about `,
-            "?"
-        ],
-        change: "chosenAct",
-        jump: "outOfOptions",
-        choices: [
-            {
-                choice: "Hm, maybe something else?",
-                loop: "chosenAct"
-            },
-            {
-                choice: "Sure, I'll do that!",
-                actFlag: "chosenAct"
-            },
-        ]
-    },
-    {
-        lines: [
-            "That's great to hear! Come tell me when you're done, alright?"
         ]
     }
 ]
