@@ -15,3 +15,5 @@ const outOfOptions = [
         ]
     },
 ]
+
+export default outOfOptions

@@ -20,11 +20,11 @@ const suggestActivity = [
             "?"
         ],
         change: "chosenAct",
+        jump: "outOfOptions",
         choices: [
             {
                 choice: "Hm, maybe something else?",
-                loop: "chosenAct",
-                jump: "outOfOptions"
+                loop: "chosenAct"
             },
             {
                 choice: "Sure, I'll do that!",
