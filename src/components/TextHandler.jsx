@@ -7,6 +7,8 @@ import lists from "./lists/listsCompiled.jsx"
 
 const TextHandler = () => {
 
+    const startScript = scripts.main
+
     const [currentlyDoing, setCurrentlyDoing] = useState()
     // If the user has set they're currently doing something
 
@@ -15,24 +17,49 @@ const TextHandler = () => {
     const [suggestedAct, setSuggestedAct] = useState()
     // The currently suggested activity
 
-    const [currentScript, setCurrentScript] = useState(scripts.suggestActivity)
+    const [currentScript, setCurrentScript] = useState(startScript)
     // The script currently being read from
-    const scriptsHistory = useRef([scripts.suggestActivity])
+    const scriptsHistory = useRef([startScript])
     // History of read scripts, most recent first
-    const [displayChoices, setDisplayChoices] = useState(scripts.suggestActivity[0].choices)
+    const [displayChoices, setDisplayChoices] = useState(startScript[0].choices)
     // The user choices currently being displayed
     const [currentLine, setCurrentLine] = useState(0)
     // The line TSK is on (not assembled)
-    const [displayLine, setDisplayLine] = useState(scripts.suggestActivity[0].lines[0])
+    const [displayLine, setDisplayLine] = useState(startScript[0].lines[0])
     // The assembled currentLine
 
     const optionsArray = useRef([...lists.activitiesList[moveType]])
     // The selection of choices to iterate through
 
+    const allVals = useRef()
+
+    useEffect(() => {
+        allVals.current = {
+            currentLine,
+            currentlyDoing,
+            currentScript,
+            displayChoices,
+            displayLine,
+            moveType,
+            optionsArray,
+            scriptsHistory,
+            suggestedAct,
+        }
+    }, [
+        currentLine,
+        currentlyDoing,
+        currentScript,
+        displayChoices,
+        displayLine,
+        moveType,
+        optionsArray,
+        scriptsHistory,
+        suggestedAct,
+    ])
+
     useEffect(() => {
         setDisplayChoices(currentScript[0].choices)
         setCurrentLine(0)
-        console.log(scriptsHistory.current)
         scriptsHistory.current = [currentScript, ...scriptsHistory.current]
     }, [currentScript])
 
@@ -64,12 +91,11 @@ const TextHandler = () => {
     }, [currentLine, suggestedAct, currentScript, moveType])
 
 
-    function randomAct(flag) {
-        console.log("options: ", optionsArray.current)
+    function randomAct() {
         return optionsArray.current.pop()
     }
 
-    function filterObject(obj) {
+    function notString(obj) {
         return (typeof obj !== "string")
     }
 
@@ -79,7 +105,7 @@ const TextHandler = () => {
                 ? "suggestionsReader"
                 : null
 
-        const choicesClean = choices.filter(filterObject).map((el, index) => {
+        const choicesClean = choices.filter(notString).map((el, index) => {
 
             return (
                 <Button
@@ -120,7 +146,10 @@ const TextHandler = () => {
         }
 
         if (reset) {
-            setCurrentScript(scriptsHistory.current[0])
+            setCurrentScript(scriptsHistory.current[1])
+            optionsArray.current = [...lists.activitiesList[moveType]]
+            utils.shuffleArray(optionsArray.current)
+            setSuggestedAct(undefined)
         }
 
         if (!loop) {
@@ -142,7 +171,6 @@ const TextHandler = () => {
             var act = randomAct(moveType)
 
             var now = currentScript[currentLine]
-            console.log(act, now)
             if (act) {
                 setSuggestedAct(act)
             } else if (!act && now.jump) {

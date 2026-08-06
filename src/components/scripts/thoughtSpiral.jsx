@@ -36,7 +36,7 @@ const thoughtSpiral = [
                 jump: "main"
             },
             {
-                choice: "Actually, I think I could use a distraction.",
+                choice: "Actually, I think I could use a distraction after all.",
                 jump: "suggestDistraction"
             },
         ]
