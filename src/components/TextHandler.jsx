@@ -88,6 +88,13 @@ const TextHandler = () => {
 
         const choicesClean = choices.filter(notString).map((el, index) => {
 
+            var jumpClass = "jumpWorks"
+
+            if (el.jump && !scripts[el.jump]) {
+                console.log(el.jump, "Script not found!")
+                jumpClass = "jumpBroken"
+            }
+
             return (
                 <Button
                     key={index}
@@ -97,6 +104,7 @@ const TextHandler = () => {
                     data-jump={el.jump ? el.jump : jumpTarget}
                     data-reset={el.reset}
                     data-set={el.set ? JSON.stringify(el.set) : ""}
+                    className={jumpClass}
                     onClick={clickHandler}>
                     {el.choice}
                 </Button>

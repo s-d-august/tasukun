@@ -8,3 +8,8 @@
   width: fit-content;
   margin: auto;
 }
+
+.jumpBroken {
+  pointer-events: none;
+  background-color: darkgrey;
+}
