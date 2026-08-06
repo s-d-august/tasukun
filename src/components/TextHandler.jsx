@@ -7,10 +7,10 @@ import lists from "./lists/listsCompiled.jsx"
 
 const TextHandler = () => {
 
-    const startScript = scripts.main
-
-    const [currentlyDoing, setCurrentlyDoing] = useState()
+    const [currentlyDoing, setCurrentlyDoing] = useState("reading")
     // If the user has set they're currently doing something
+    var startScript = scripts.main
+
 
     const [moveType, setMoveType] = useState("move")
     // Whether the user feels like doing something active (options: move, nomove, listen)
@@ -31,21 +31,7 @@ const TextHandler = () => {
     const optionsArray = useRef([...lists.activitiesList[moveType]])
     // The selection of choices to iterate through
 
-    const allVals = useRef()
-
-    useEffect(() => {
-        allVals.current = {
-            currentLine,
-            currentlyDoing,
-            currentScript,
-            displayChoices,
-            displayLine,
-            moveType,
-            optionsArray,
-            scriptsHistory,
-            suggestedAct,
-        }
-    }, [
+    const getAllVals = () => ({
         currentLine,
         currentlyDoing,
         currentScript,
@@ -55,7 +41,7 @@ const TextHandler = () => {
         optionsArray,
         scriptsHistory,
         suggestedAct,
-    ])
+    })
 
     useEffect(() => {
         setDisplayChoices(currentScript[0].choices)
@@ -69,25 +55,20 @@ const TextHandler = () => {
     }, [moveType])
 
     useEffect(() => {
-        setDisplayChoices(currentScript[currentLine].choices);
 
-        var fullLine
-        var now = currentScript[currentLine]
-        var toChange
-        if (now.change) {
-            if (now.change === "suggestedAct") {
-                if (suggestedAct === undefined) {
-                    toChange = randomAct(moveType)
-                    setSuggestedAct(toChange)
-                } else {
-                    toChange = suggestedAct
-                }
-            }
-            fullLine = now.lines[0] + toChange + now.lines[1]
-        } else if (now.lines) {
-            fullLine = now.lines[0]
-        }
-        setDisplayLine(fullLine);
+        const assembledScript = typeof currentScript === "function"
+            ? currentScript(getAllVals())[currentLine]
+            : currentScript[currentLine]
+
+        setDisplayChoices(assembledScript.choices);
+
+        const nextLineText = Array.isArray(assembledScript?.lines)
+            ? assembledScript.lines.join(" ")
+            : typeof assembledScript === "string"
+                ? assembledScript
+                : "";
+
+        setDisplayLine(nextLineText);
     }, [currentLine, suggestedAct, currentScript, moveType])
 
 
@@ -115,6 +96,7 @@ const TextHandler = () => {
                     data-loop={el.loop}
                     data-jump={el.jump ? el.jump : jumpTarget}
                     data-reset={el.reset}
+                    data-set={el.set ? JSON.stringify(el.set) : ""}
                     onClick={clickHandler}>
                     {el.choice}
                 </Button>
@@ -125,24 +107,46 @@ const TextHandler = () => {
     }
 
     function scriptJump(jump) {
-        if (scripts[jump]) {
-            setCurrentScript(scripts[jump]);
-            setDisplayChoices(scripts[jump][0].choices);
-            setCurrentLine(0);
-        } else console.log(jump, "Script not found!")
+        const scriptEntry = scripts[jump];
+
+        if (!scriptEntry) {
+            console.log(jump, "Script not found!")
+            return;
+        }
+
+        const nextScript = typeof scriptEntry === "function"
+            ? scriptEntry(getAllVals())
+            : scriptEntry;
+
+        setCurrentScript(nextScript);
+        setDisplayChoices(nextScript[0].choices);
+        setCurrentLine(0);
     }
 
     function clickHandler(event) {
-        const { moveflag, actflag, loop, jump, reset } = event.currentTarget.dataset;
+        const { moveflag, actflag, loop, jump, reset, set } = event.currentTarget.dataset;
 
         if (moveflag) {
             setMoveType(moveflag)
         }
 
-        if (currentlyDoing) {
+        if (set) {
+            try {
+                const parsedSet = JSON.parse(set);
+                if (Array.isArray(parsedSet) && parsedSet[0] === "currentlyDoing") {
+                    setCurrentlyDoing(parsedSet[1]);
+                }
+            } catch {
+                console.log("Invalid set payload", set);
+            }
+        }
+
+        if (currentlyDoing !== undefined) {
             if (currentlyDoing === "false") {
                 setCurrentlyDoing(null)
-            } else setCurrentlyDoing(suggestedAct);
+            } else if (suggestedAct !== undefined) {
+                setCurrentlyDoing(suggestedAct)
+            }
         }
 
         if (reset) {

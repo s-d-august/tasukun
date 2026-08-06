@@ -28,7 +28,11 @@ const main = [
             {
                 choice: "I need a reminder.",
                 jump: "reminder"
-            }
+            },
+            {
+                choice: "TEST",
+                jump: "test"
+            },
         ]
     },
 ]

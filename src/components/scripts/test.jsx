@@ -1,10 +1,9 @@
-const isDoing = (allVals) => {
-    console.log(allVals)
+const test = (allVals) => {
     return (
         [
             {
                 lines: [
-                    `How's it going? Are you still busy with ${allVals}?`
+                    `TEST: ${allVals.currentlyDoing}`
                 ],
 
                 choices: [
@@ -14,7 +13,7 @@ const isDoing = (allVals) => {
                     },
                     {
                         choice: "Nah, I changed my mind.",
-                        set: { "currentlyDoing": false },
+
                         jump: "quit"
                     },
                     {
@@ -31,4 +30,4 @@ const isDoing = (allVals) => {
     )
 }
 
-export default isDoing
+export default test

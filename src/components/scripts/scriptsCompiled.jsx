@@ -1,24 +1,26 @@
-import suggestActivity from "./suggestActivity"
-import outOfOptions from "./outOfOptions"
+import done from "./done"
 import isDoing from "./isDoing"
 import main from "./main"
+import outOfOptions from "./outOfOptions"
 import quit from "./quit"
-import done from "./done"
-import suggestionsReader from "./suggestionsReader"
+import suggestActivity from "./suggestActivity"
 import suggestDistraction from "./suggestDistraction"
+import suggestionsReader from "./suggestionsReader"
+import test from "./test"
 import thoughtSpiral from "./thoughtSpiral"
 
 const scripts =
 {
-    isDoing,
-    suggestActivity,
-    outOfOptions,
-    main,
     done,
+    isDoing,
+    main,
+    outOfOptions,
     quit,
-    suggestionsReader,
     suggestActivity,
-    thoughtSpiral
+    suggestActivity,
+    suggestionsReader,
+    test,
+    thoughtSpiral,
 }
 
 
