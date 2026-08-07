@@ -1,5 +1,5 @@
 const done = (allVals) => {
-    console.log("test", allVals)
+    console.log("allVals", allVals)
     return (
         [
             {

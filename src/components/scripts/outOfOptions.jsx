@@ -1,19 +1,23 @@
-const outOfOptions = [
-    {
-        lines: [
-            "Those are all the suggestions I have!"
-        ],
-        choices: [
+const outOfOptions = () => {
+    return (
+        [
             {
-                choice: "Can you go back a bit?",
-                reset: "true"
+                lines: [
+                    "Those are all the suggestions I have!"
+                ],
+                choices: [
+                    {
+                        choice: "Can you go back a bit?",
+                        reset: "true"
+                    },
+                    {
+                        choice: "Back to the drawing board, I guess.",
+                        jump: "main"
+                    }
+                ]
             },
-            {
-                choice: "Back to the drawing board, I guess.",
-                jump: "main"
-            }
         ]
-    },
-]
+    )
+}
 
 export default outOfOptions
