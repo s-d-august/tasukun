@@ -11,21 +11,20 @@ const TextHandler = () => {
     // If the user has set they're currently doing something
     var startScript = scripts.main
 
-
     const [moveType, setMoveType] = useState("move")
     // Whether the user feels like doing something active (options: move, nomove, listen)
-    const [suggestedAct, setSuggestedAct] = useState()
+    const [suggestedAct, setSuggestedAct] = useState("reading")
     // The currently suggested activity
 
-    const [currentScript, setCurrentScript] = useState(startScript)
-    // The script currently being read from
+    const [currentScriptFunc, setCurrentScriptFunc] = useState(() => startScript)
+    // The function that generates the currently selected script. MUST be set with ()=>
     const scriptsHistory = useRef([startScript])
     // History of read scripts, most recent first
-    const [displayChoices, setDisplayChoices] = useState(startScript[0].choices)
+    const [displayChoices, setDisplayChoices] = useState(currentScriptFunc()[0].choices)
     // The user choices currently being displayed
     const [currentLine, setCurrentLine] = useState(0)
     // The line TSK is on (not assembled)
-    const [displayLine, setDisplayLine] = useState(startScript[0].lines[0])
+    const [displayLine, setDisplayLine] = useState()
     // The assembled currentLine
 
     const optionsArray = useRef([...lists.activitiesList[moveType]])
@@ -34,43 +33,42 @@ const TextHandler = () => {
     const getAllVals = () => ({
         currentLine,
         currentlyDoing,
-        currentScript,
+        currentScriptFunc,
         displayChoices,
         displayLine,
         moveType,
-        optionsArray,
-        scriptsHistory,
+        optionsArray: optionsArray.current,
+        scriptsHistory: scriptsHistory.current,
         suggestedAct,
     })
 
     useEffect(() => {
-        setDisplayChoices(currentScript[0].choices)
-        setCurrentLine(0)
-        scriptsHistory.current = [currentScript, ...scriptsHistory.current]
-    }, [currentScript])
+        console.log("test", currentScriptFunc(getAllVals())[0].choices)
+        setDisplayChoices(currentScriptFunc(getAllVals())[0].choices)
+    }, [])
+    //Initializes values
+
+    useEffect(() => {
+        scriptsHistory.current = [(currentScriptFunc), ...scriptsHistory.current]
+    }, [currentScriptFunc])
+    // Updates script history (stored as function) when script changes
 
     useEffect(() => {
         optionsArray.current = [...lists.activitiesList[moveType]]
         utils.shuffleArray(optionsArray.current)
     }, [moveType])
+    // Refreshes the array of suggestions when moveType changes
 
     useEffect(() => {
-
-        const assembledScript = typeof currentScript === "function"
-            ? currentScript(getAllVals())[currentLine]
-            : currentScript[currentLine]
+        const assembledScript = currentScriptFunc(getAllVals())[currentLine]
+        console.log("assemble script currentScriptFunc: ", currentScriptFunc)
 
         setDisplayChoices(assembledScript.choices);
 
-        const nextLineText = Array.isArray(assembledScript?.lines)
-            ? assembledScript.lines.join(" ")
-            : typeof assembledScript === "string"
-                ? assembledScript
-                : "";
+        setDisplayLine(assembledScript.lines);
+    }, [currentLine, suggestedAct, currentScriptFunc, moveType])
 
-        setDisplayLine(nextLineText);
-    }, [currentLine, suggestedAct, currentScript, moveType])
-
+    console.log("script test", scripts.suggestionsReader(getAllVals()))
 
     function randomAct() {
         return optionsArray.current.pop()
@@ -81,6 +79,8 @@ const TextHandler = () => {
     }
 
     function choiceDisplay(choices) {
+        // expecting an array of objects
+        console.log(choices)
         const jumpTarget =
             choices.includes("suggestionsReader")
                 ? "suggestionsReader"
@@ -91,7 +91,7 @@ const TextHandler = () => {
             var jumpClass = "jumpWorks"
 
             if (el.jump && !scripts[el.jump]) {
-                console.log(el.jump, "Script not found!")
+                //   console.log(el.jump, "Script not found!")
                 jumpClass = "jumpBroken"
             }
 
@@ -114,26 +114,21 @@ const TextHandler = () => {
         return choicesClean;
     }
 
-    function scriptJump(jump) {
+    function scriptJump(jump, line) {
         const scriptEntry = scripts[jump];
 
         if (!scriptEntry) {
-            console.log(jump, "Script not found!")
+            //    console.log(jump, "Script not found!")
             return;
         }
-
-        const nextScript = typeof scriptEntry === "function"
-            ? scriptEntry(getAllVals())
-            : scriptEntry;
-
-        setCurrentScript(nextScript);
-        setDisplayChoices(nextScript[0].choices);
-        setCurrentLine(0);
+        console.log("scriptEntry", scriptEntry, getAllVals())
+        setCurrentScriptFunc(() => scriptEntry);
+        setCurrentLine(line || 0);
     }
 
     function clickHandler(event) {
         const { moveflag, actflag, loop, jump, reset, set } = event.currentTarget.dataset;
-
+        console.log("click handler allVals", getAllVals())
         if (moveflag) {
             setMoveType(moveflag)
         }
@@ -149,40 +144,35 @@ const TextHandler = () => {
             }
         }
 
-        if (currentlyDoing !== undefined) {
-            if (currentlyDoing === "false") {
-                setCurrentlyDoing(null)
-            } else if (suggestedAct !== undefined) {
-                setCurrentlyDoing(suggestedAct)
-            }
-        }
-
         if (reset) {
-            setCurrentScript(scriptsHistory.current[1])
+            console.log("script from history", scriptsHistory.current[1])
+            setCurrentScriptFunc(() => scriptsHistory.current[1])
             optionsArray.current = [...lists.activitiesList[moveType]]
             utils.shuffleArray(optionsArray.current)
             setSuggestedAct(undefined)
         }
-
+        console.log("not loop call currentScriptFunc: ", currentScriptFunc, getAllVals())
         if (!loop) {
             if (jump) {
                 scriptJump(jump)
             } else {
                 const nextLine = currentLine + 1;
-                if (!currentScript[nextLine]) {
-                    console.log(currentScript, "Line not found!")
+
+                if (!currentScriptFunc(getAllVals())[nextLine]) {
+                    console.log(currentScriptFunc, "Line not found!")
                     return
                 }
                 setCurrentLine(nextLine);
-                setDisplayChoices(currentScript[nextLine].choices);
+                setDisplayChoices(currentScriptFunc(getAllVals())[nextLine].choices);
             }
 
         }
 
         if (loop === 'suggestedAct') {
             var act = randomAct(moveType)
+            console.log("loop call currentScriptFunc: ", currentScriptFunc)
 
-            var now = currentScript[currentLine]
+            var now = currentScriptFunc(getAllVals())[currentLine]
             if (act) {
                 setSuggestedAct(act)
             } else if (!act && now.jump) {

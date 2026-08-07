@@ -1,5 +1,10 @@
 TASUKUN NOTES
 
+update value
+pass up-to-date values to script
+return script w/ value
+update line
+
 BASIC
 Greets user, asks how they can help
 Options: 

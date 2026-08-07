@@ -1,5 +1,5 @@
 const isDoing = (allVals) => {
-    console.log(allVals)
+    console.log("allVals: ", allVals)
     return (
         [
             {
