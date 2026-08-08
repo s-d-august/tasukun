@@ -48,9 +48,7 @@ const TextHandler = () => {
     // Updates script history (stored as function) when script changes
 
     useEffect(() => {
-        optionsArray.current = [...lists.activitiesList[moveType]]
-        utils.shuffleArray(optionsArray.current)
-        setSuggestedAct(randomAct())
+        resetOptionsArray()
     }, [moveType])
     // Refreshes the array of suggestions when moveType changes
 
@@ -64,6 +62,12 @@ const TextHandler = () => {
 
     function randomAct() {
         return optionsArray.current.pop()
+    }
+
+    function resetOptionsArray() {
+        optionsArray.current = [...lists.activitiesList[moveType]]
+        utils.shuffleArray(optionsArray.current)
+        setSuggestedAct(randomAct())
     }
 
     function notString(obj) {
@@ -118,6 +122,7 @@ const TextHandler = () => {
 
     function clickHandler(event) {
         const { moveflag, actflag, loop, jump, reset, set } = event.currentTarget.dataset;
+        
         if (moveflag) {
             setMoveType(moveflag)
         }
@@ -145,10 +150,9 @@ const TextHandler = () => {
         if (reset) {
             console.log("script from history", scriptsHistory.current[1])
             setCurrentScript(() => scriptsHistory.current[1])
-            optionsArray.current = [...lists.activitiesList[moveType]]
-            utils.shuffleArray(optionsArray.current)
-            setSuggestedAct(randomAct())
+            resetOptionsArray()
         }
+
         if (!loop) {
             if (jump) {
                 scriptJump(jump)
@@ -162,7 +166,6 @@ const TextHandler = () => {
                 setCurrentLine(nextLine);
                 setDisplayChoices(scripts[currentScript](getAllVals())[nextLine].choices);
             }
-
         }
 
         if (loop === 'suggestedAct') {
