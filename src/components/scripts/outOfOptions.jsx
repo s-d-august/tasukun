@@ -7,11 +7,11 @@ const outOfOptions = () => {
                 ],
                 choices: [
                     {
-                        choice: "Can you go back a bit?",
+                        choice: "Can you go through them one more time?",
                         reset: "true"
                     },
                     {
-                        choice: "Back to the drawing board, I guess.",
+                        choice: "Back to the drawing board, I guess. [return to main page]",
                         jump: "main"
                     }
                 ]

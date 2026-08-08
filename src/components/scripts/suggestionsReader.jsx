@@ -14,7 +14,7 @@ const suggestionsReader = (allVals) => {
                     },
                     {
                         choice: "Sure, I'll do that!",
-                        currentlyDoing: "suggestedAct"
+                        set: ["currentlyDoing", allVals.suggestedAct]
                     },
                 ]
             },

@@ -14,7 +14,7 @@ const isDoing = (allVals) => {
                     },
                     {
                         choice: "Nah, I changed my mind.",
-                        set: { "currentlyDoing": false },
+                        set: ["currentlyDoing", null],
                         jump: "quit"
                     },
                     {

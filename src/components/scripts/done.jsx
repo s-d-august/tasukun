@@ -10,7 +10,7 @@ const done = (allVals) => {
                 choices: [
                     {
                         choice: "Aw thanks!",
-                        set: (["currentlyDoing", "false"])
+                        set: (["currentlyDoing", null])
                     }
                 ]
             },

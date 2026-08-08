@@ -7,20 +7,20 @@ import lists from "./lists/listsCompiled.jsx"
 
 const TextHandler = () => {
 
-    const [currentlyDoing, setCurrentlyDoing] = useState("reading")
+    const [currentlyDoing, setCurrentlyDoing] = useState(localStorage.getItem("currentlyDoing") == "null" ? null : localStorage.getItem("currentlyDoing"))
     // If the user has set they're currently doing something
     var startScript = "main"
 
     const [moveType, setMoveType] = useState("move")
     // Whether the user feels like doing something active (options: move, nomove, listen)
-    const [suggestedAct, setSuggestedAct] = useState("reading")
+    const [suggestedAct, setSuggestedAct] = useState()
     // The currently suggested activity
 
     const [currentScript, setCurrentScript] = useState(startScript)
     // The name of the current script. 
     const scriptsHistory = useRef([startScript])
     // History of read scripts, most recent first
-    const [displayChoices, setDisplayChoices] = useState(() => scripts[startScript]()[0].choices)
+    const [displayChoices, setDisplayChoices] = useState(() => scripts[startScript]({ currentlyDoing })[0].choices)
     // The user choices currently being displayed
     const [currentLine, setCurrentLine] = useState(0)
     // The line TSK is on (not assembled)
@@ -41,13 +41,6 @@ const TextHandler = () => {
         scriptsHistory: scriptsHistory.current,
         suggestedAct,
     })
-    console.log("script test", scripts)
-
-    useEffect(() => {
-        console.log("test", scripts[currentScript](getAllVals())[0].choices)
-        setDisplayChoices(scripts[currentScript](getAllVals())[0].choices)
-    }, [])
-    //Initializes values
 
     useEffect(() => {
         scriptsHistory.current = [(currentScript), ...scriptsHistory.current]
@@ -57,19 +50,17 @@ const TextHandler = () => {
     useEffect(() => {
         optionsArray.current = [...lists.activitiesList[moveType]]
         utils.shuffleArray(optionsArray.current)
+        setSuggestedAct(randomAct())
     }, [moveType])
     // Refreshes the array of suggestions when moveType changes
 
     useEffect(() => {
         const assembledScript = scripts[currentScript](getAllVals())[currentLine]
-        console.log("assemble script currentScript: ", currentScript)
 
         setDisplayChoices(assembledScript.choices);
 
         setDisplayLine(assembledScript.lines);
     }, [currentLine, suggestedAct, currentScript, moveType])
-
-    console.log("script test", scripts)
 
     function randomAct() {
         return optionsArray.current.pop()
@@ -81,7 +72,6 @@ const TextHandler = () => {
 
     function choiceDisplay(choices) {
         // expecting an array of objects
-        console.log(choices)
         const jumpTarget =
             choices.includes("suggestionsReader")
                 ? "suggestionsReader"
@@ -122,23 +112,30 @@ const TextHandler = () => {
             //    console.log(jump, "Script not found!")
             return;
         }
-        console.log("scriptEntry", scriptEntry, getAllVals())
         setCurrentScript(scriptEntry);
         setCurrentLine(line || 0);
     }
 
     function clickHandler(event) {
         const { moveflag, actflag, loop, jump, reset, set } = event.currentTarget.dataset;
-        console.log("click handler allVals", getAllVals())
         if (moveflag) {
             setMoveType(moveflag)
         }
 
         if (set) {
             try {
+                console.log("set")
                 const parsedSet = JSON.parse(set);
                 if (Array.isArray(parsedSet) && parsedSet[0] === "currentlyDoing") {
-                    setCurrentlyDoing(parsedSet[1]);
+                    console.log("setCurrentlyDoing")
+                    var doing
+                    if (moveType === "listen") {
+                        doing = (parsedSet[1] == null)
+                            ? null
+                            : ("listening to " + parsedSet[1])
+                    } else doing = parsedSet[1]
+                    setCurrentlyDoing(doing);
+                    localStorage.setItem("currentlyDoing", doing)
                 }
             } catch {
                 console.log("Invalid set payload", set);
@@ -150,9 +147,8 @@ const TextHandler = () => {
             setCurrentScript(() => scriptsHistory.current[1])
             optionsArray.current = [...lists.activitiesList[moveType]]
             utils.shuffleArray(optionsArray.current)
-            setSuggestedAct(undefined)
+            setSuggestedAct(randomAct())
         }
-        console.log("not loop call currentScript: ", currentScript, getAllVals())
         if (!loop) {
             if (jump) {
                 scriptJump(jump)
@@ -171,7 +167,6 @@ const TextHandler = () => {
 
         if (loop === 'suggestedAct') {
             var act = randomAct(moveType)
-            console.log("loop call currentScript: ", currentScript)
 
             var now = scripts[currentScript](getAllVals())[currentLine]
             if (act) {

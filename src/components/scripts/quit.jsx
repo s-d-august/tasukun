@@ -8,7 +8,8 @@ const quit = () => {
                 choices: [
                     {
                         choice: "That's all for now. [return to main page]",
-                        jump: "main"
+                        jump: "main",
+                        set: ["currentlyDoing", null]
                     }
                 ]
             },
