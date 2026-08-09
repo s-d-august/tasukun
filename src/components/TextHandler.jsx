@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react'
 import * as utils from "./utils.js"
 import scripts from "./scripts/scriptsCompiled.jsx"
 import lists from "./lists/listsCompiled.jsx"
-
+import AvatarHandler from "./AvatarHandler.jsx"
 
 const TextHandler = () => {
 
@@ -29,6 +29,8 @@ const TextHandler = () => {
     // The line TSK is on (not assembled)
     const [displayLine, setDisplayLine] = useState()
     // The assembled currentLine
+
+    const [currentExpression, setCurrentExpression] = useState("def")
 
     const optionsArray = useRef([...lists.activitiesList[moveType]])
     // The selection of choices to iterate through
@@ -206,6 +208,10 @@ const TextHandler = () => {
 
     return (
         <div>
+            <div id="avatarDiv">
+                <AvatarHandler
+                    currentExpression={currentExpression} />
+            </div>
             <p id="lineDiv">
                 {displayLine}
             </p>

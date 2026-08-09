@@ -13,3 +13,8 @@
   pointer-events: none;
   background-color: darkgrey;
 }
+
+#avatarImg {
+  width: 400px;
+  height: auto;
+}
