@@ -45,7 +45,7 @@ const main = (allVals) => {
                     },
                     {
                         choice: "I'm in a thought spiral, help...",
-                        jump: "broken"
+                        jump: "thoughtSpiral"
                     },
                     {
                         choice: "I could really use an encouraging reminder.",

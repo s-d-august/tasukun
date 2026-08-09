@@ -4,26 +4,32 @@ export const shuffleArray = (arr) => {
     });
 }
 
-export const pluckRandomFrom = (array, newArray) => {
-    console.log("up top", newArray)
-    if (!Array.isArray(array)) {
-        console.log("test1")
-        return null;
+export const blockHandler = (block, index) => {
+    if (!Array.isArray(block)) {
+        console.log("Text block is not formatted as an array!")
+        return
     }
 
-    if (newArray.length === 0) {
-        newArray = array.slice();
-        shuffleArray(newArray);
-        console.log("test2", array, newArray)
-        return null;
+    const blockOutput = block.map((el) => {
+        return (
+            {
+                lines: [
+                    el
+                ],
+
+            }
+        )
+    })
+    console.log(blockOutput)
+    return blockOutput
+}
+
+export const normalizeScript = (scriptOutput) => {
+    if (!Array.isArray(scriptOutput)) {
+        return []
     }
 
-    if (!Array.isArray(newArray)) {
-        newArray = array.slice();
-        shuffleArray(newArray);
-        console.log("test3", newArray)
-
-    }
-    console.log(newArray)
-    return newArray.pop();
+    return scriptOutput.flat(Infinity).filter((entry) => {
+        return entry && typeof entry === "object" && !Array.isArray(entry)
+    })
 }

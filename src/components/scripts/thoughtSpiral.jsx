@@ -1,14 +1,18 @@
+import { blockHandler } from "../utils"
+
 const thoughtSpiral = () => {
+    const block = [
+        "I'm so sorry to hear that...! You can handle this, though!",
+        "Let's start by taking some deep breaths, okay?",
+        "Don't forget the acupressure and eye-roll!"
+    ]
     return (
         [
+            blockHandler(block),
             {
-                block: [
-                    "I'm so sorry to hear that...! You can handle this, though!",
-                    "Let's start by taking some deep breaths, okay?",
-                    "Don't forget the acupressure and eye-roll!"
-                ],
                 animation: "breathing"
-            }, {
+            },
+            {
                 lines: [
                     "How was that? Are you feeling any better?"
                 ],

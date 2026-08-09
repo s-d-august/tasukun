@@ -20,7 +20,10 @@ const TextHandler = () => {
     // The name of the current script. 
     const scriptsHistory = useRef([startScript])
     // History of read scripts, most recent first
-    const [displayChoices, setDisplayChoices] = useState(() => scripts[startScript]({ currentlyDoing })[0].choices)
+    const [displayChoices, setDisplayChoices] = useState(() => {
+        const initialLines = utils.normalizeScript(scripts[startScript]({ currentlyDoing }))
+        return initialLines[0]?.choices
+    })
     // The user choices currently being displayed
     const [currentLine, setCurrentLine] = useState(0)
     // The line TSK is on (not assembled)
@@ -42,6 +45,10 @@ const TextHandler = () => {
         suggestedAct,
     })
 
+    const getScriptLines = () => {
+        return utils.normalizeScript(scripts[currentScript](getAllVals()))
+    }
+
     useEffect(() => {
         scriptsHistory.current = [(currentScript), ...scriptsHistory.current]
     }, [currentScript])
@@ -53,11 +60,11 @@ const TextHandler = () => {
     // Refreshes the array of suggestions when moveType changes
 
     useEffect(() => {
-        const assembledScript = scripts[currentScript](getAllVals())[currentLine]
+        const assembledScript = getScriptLines()[currentLine]
 
-        setDisplayChoices(assembledScript.choices);
+        setDisplayChoices(assembledScript?.choices);
 
-        setDisplayLine(assembledScript.lines);
+        setDisplayLine(assembledScript?.lines);
     }, [currentLine, suggestedAct, currentScript, moveType])
 
     function randomAct() {
@@ -74,12 +81,26 @@ const TextHandler = () => {
         return (typeof obj !== "string")
     }
 
+    function isString(obj) {
+        return (typeof obj == "string")
+    }
+
     function choiceDisplay(choices) {
         // expecting an array of objects
-        const jumpTarget =
-            choices.includes("suggestionsReader")
-                ? "suggestionsReader"
-                : null
+
+        if (!choices) {
+            return (
+                <Button
+                    key={0}
+                    className={"jumpWorks"}
+                    onClick={clickHandler}>
+                    {"..."}
+                </Button>
+            )
+        }
+
+        const jumpTarget = choices.filter(isString)
+        // If the choice array contains a bare string, that's used as the jump for all choices
 
         const choicesClean = choices.filter(notString).map((el, index) => {
 
@@ -122,7 +143,7 @@ const TextHandler = () => {
 
     function clickHandler(event) {
         const { moveflag, actflag, loop, jump, reset, set } = event.currentTarget.dataset;
-        
+
         if (moveflag) {
             setMoveType(moveflag)
         }
@@ -158,20 +179,21 @@ const TextHandler = () => {
                 scriptJump(jump)
             } else {
                 const nextLine = currentLine + 1;
+                const scriptLines = getScriptLines()
 
-                if (!scripts[currentScript](getAllVals())[nextLine]) {
+                if (!scriptLines[nextLine]) {
                     console.log(currentScript, "Line not found!")
                     return
                 }
                 setCurrentLine(nextLine);
-                setDisplayChoices(scripts[currentScript](getAllVals())[nextLine].choices);
+                setDisplayChoices(scriptLines[nextLine].choices);
             }
         }
 
         if (loop === 'suggestedAct') {
             var act = randomAct(moveType)
 
-            var now = scripts[currentScript](getAllVals())[currentLine]
+            var now = getScriptLines()[currentLine]
             if (act) {
                 setSuggestedAct(act)
             } else if (!act && now.jump) {
