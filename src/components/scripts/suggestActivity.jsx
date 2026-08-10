@@ -7,6 +7,7 @@ const suggestActivity = () => {
                 lines: [
                     "Of course! Do you feel like moving your body?"
                 ],
+                face: "earnest",
                 choices: [
                     "suggestionsReader",
                     {

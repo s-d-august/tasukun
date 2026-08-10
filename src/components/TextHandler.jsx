@@ -67,6 +67,11 @@ const TextHandler = () => {
         setDisplayChoices(assembledScript?.choices);
 
         setDisplayLine(assembledScript?.lines);
+
+        if (assembledScript.face) {
+            setCurrentExpression(assembledScript.face)
+        }
+
     }, [currentLine, suggestedAct, currentScript, moveType])
 
     function randomAct() {
@@ -210,7 +215,7 @@ const TextHandler = () => {
         <div>
             <div id="avatarDiv">
                 <AvatarHandler
-                    currentExpression={currentExpression} />
+                    face={currentExpression} />
             </div>
             <p id="lineDiv">
                 {displayLine}

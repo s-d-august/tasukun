@@ -22,6 +22,7 @@ const suggestionsReader = (allVals) => {
                 lines: [
                     "That's great to hear! Come tell me when you're done, alright?"
                 ],
+                face: "pleased",
                 choices: [
                     {
                         choice: "You got it! [return to main page]",

@@ -6,7 +6,7 @@ const main = (allVals) => {
             [
                 {
                     lines: [`Last I heard, you were ${allVals.currentlyDoing}. How's that going?`],
-
+                    face: "def",
                     choices: [
                         {
                             choice: "I'm all done for now!",
@@ -29,7 +29,7 @@ const main = (allVals) => {
         [
             {
                 lines: [`How are you feeling? Are you up to anything?`],
-
+                face: "def",
                 choices: [
                     {
                         choice: "I am, actually, let me tell you!",

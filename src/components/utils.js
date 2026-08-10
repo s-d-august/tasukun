@@ -10,6 +10,7 @@ export const blockHandler = (block, index) => {
         return
     }
 
+
     const blockOutput = block.map((el) => {
         return (
             {
