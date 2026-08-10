@@ -27,7 +27,7 @@ export const blockHandler = (block, index) => {
 
 export const normalizeScript = (scriptOutput) => {
     if (!Array.isArray(scriptOutput)) {
-        return []
+        return
     }
 
     return scriptOutput.flat(Infinity).filter((entry) => {

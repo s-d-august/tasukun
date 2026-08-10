@@ -5,7 +5,6 @@ import breath3 from "../files/breath3.png"
 import def from "../files/def.png"
 import earnest from "../files/earnest.png"
 import excited from "../files/excited.png"
-import faceDefault from "../files/face.png"
 import gentle from "../files/gentle.png"
 import pleased from "../files/pleased.png"
 import worried from "../files/worried.png"
@@ -17,7 +16,6 @@ const avatarImages = {
     def,
     earnest,
     excited,
-    face: faceDefault,
     gentle,
     pleased,
     worried,
