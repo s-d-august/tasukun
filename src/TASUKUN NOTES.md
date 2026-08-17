@@ -2,7 +2,8 @@ TASUKUN NOTES
 
 update value
 pass up-to-date values to script
-return script w/ value
+script logic executes
+pass executed script
 update line
 
 BASIC

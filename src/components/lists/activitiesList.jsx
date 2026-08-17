@@ -1,8 +1,9 @@
 const activitiesList =
-// ask string formatted as "I want something..."
+// type string formatted as "I want something..."
 {
+    ask: "I'm so glad you asked! What do you feel up for?",
     move: {
-        ask: "active to do.",
+        type: "Something that gets me moving!",
         all: [
             "going for a walk",
             "tidying up",
@@ -11,7 +12,7 @@ const activitiesList =
 
     },
     nomove: {
-        ask: "to do that doesn't require much moving.",
+        type: "Nothing too active.",
         focus: [
             "writing film reviews",
             "coding",
@@ -28,7 +29,7 @@ const activitiesList =
     },
     listen:
     {
-        ask: "to listen to.",
+        type: "Something to listen to.",
         all: [
             "Bandcamp Daily albums",
             "Friends at the Table",

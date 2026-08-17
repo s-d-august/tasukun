@@ -3,21 +3,17 @@ const done = (allVals) => {
     return (
         [
             {
-                lines: [
-                    `You're all finished with ${allVals.currentlyDoing}? That's great to hear! I'm so proud of you!`
-                ],
+                line: `You're all finished with ${allVals.currentlyDoing}? That's great to hear! I'm so proud of you!`,
                 face: "excited",
                 choices: [
                     {
                         choice: "Aw thanks!",
-                        set: (["currentlyDoing", null])
+                        set: ["currentlyDoing", null]
                     }
                 ]
             },
             {
-                lines: [
-                    "Of course! I'm always happy to hear when you get things done. Keep up the good work!"
-                ],
+                line: "Of course! I'm always happy to hear when you get things done. Keep up the good work!",
                 face: "pleased",
                 choices: [
                     {

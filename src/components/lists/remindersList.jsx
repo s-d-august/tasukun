@@ -1,8 +1,8 @@
 const remindersList = {
-    // ask string formatted as "I need..."
+    // typestring formatted as "I need..."
     affirmation:
     {
-        ask: "some affirmation.",
+        type: "some affirmation.",
         personal:
             [
                 "It doesn't always feel like it, but you've been through a lot, and you've made it this far.",
@@ -22,7 +22,7 @@ const remindersList = {
     },
     goals:
     {
-        ask: "to revisit my goals.",
+        type: "to revisit my goals.",
         general: [
             "You're really sick of being bored!",
             "You want to get back into the habit of doing things so you don't have to be.",
@@ -38,7 +38,7 @@ const remindersList = {
     },
     dont:
     {
-        ask: "a reminder not to do substances.",
+        type: "a reminder not to do substances.",
         drinking: [
             "Drinking can be fun, but it can also mess you up pretty bad.",
             "If you go to sleep drunk, you'll wake up at a stupid hour when you sober up.",
@@ -55,7 +55,7 @@ const remindersList = {
 
     help:
     {
-        ask: "help doing something.",
+        type: "help doing something.",
         quick: [
             "You've done this so many times before, you've got it!",
             "It's never as time-consuming or annoying or scary as you expect.",

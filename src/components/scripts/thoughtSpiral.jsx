@@ -5,24 +5,18 @@ const thoughtSpiral = () => {
     return (
         [
             {
-                lines: ["I'm so sorry to hear that...! You can handle this, though!"],
+                line: "I'm so sorry to hear that...! You can handle this, though!",
                 face: "worried"
             },
-            {
-                lines: ["Let's start by taking some deep breaths, okay?"],
+            "Let's start by taking some deep breaths, okay?",
+            "Don't forget the acupressure and eye-roll!",
 
-            },
-            {
-                lines: ["Don't forget the acupressure and eye-roll!"],
-            },
             {
                 animation: "breathing",
                 face: "breath1"
             },
             {
-                lines: [
-                    "How was that? Are you feeling any better?"
-                ],
+                line: "How was that? Are you feeling any better?",
                 face: "gentle",
                 choices: [
                     {
@@ -39,9 +33,7 @@ const thoughtSpiral = () => {
                 ]
             },
             {
-                lines: [
-                    "That's wonderful! But if you start feeling bad again, don't hesitate to ask me, okay?"
-                ],
+                line: "That's wonderful! But if you start feeling bad again, don't hesitate to typeme, okay?",
                 face: "pleased",
 
                 choices: [

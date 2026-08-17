@@ -7,14 +7,14 @@ const suggestDistraction = () => {
                 ],
 
                 choices: [
-                    "suggestionsReader",
+                    "listReader",
                     {
                         choice: "No, thankfully.",
-                        moveFlag: "nomove"
+                        listinfo: "nomove"
                     },
                     {
                         choice: "Yes, unfortunately.",
-                        moveFlag: "listen"
+                        listinfo: "listen"
                     }
                 ]
             }

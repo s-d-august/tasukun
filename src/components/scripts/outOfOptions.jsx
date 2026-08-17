@@ -2,9 +2,7 @@ const outOfOptions = () => {
     return (
         [
             {
-                lines: [
-                    "Those are all the suggestions I have!"
-                ],
+                line: "Those are all the suggestions I have!",
                 face: "worried",
                 choices: [
                     {

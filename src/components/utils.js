@@ -1,36 +1,26 @@
+import lists from "./lists/listsCompiled";
+
 export const shuffleArray = (arr) => {
-    arr.sort(function (a, b) {
-        return Math.random() - 0.5;
-    });
+
+    if (arr) {
+        arr.sort(function (a, b) {
+            return Math.random() - 0.5;
+        });
+    } else return
 }
 
-export const blockHandler = (block, index) => {
-    if (!Array.isArray(block)) {
-        console.log("Text block is not formatted as an array!")
-        return
-    }
+export const findList = (currentList, listType, listSub) => {
+
+    console.log(currentList, listType, listSub)
+
+    const baseList = lists[currentList]
+    if (!baseList) return undefined
+
+    if (listType && listSub) {
+        return baseList[listType]?.[listSub]
+    } else if (listType) {
+        return baseList[listType]
+    } else return baseList
 
 
-    const blockOutput = block.map((el) => {
-        return (
-            {
-                lines: [
-                    el
-                ],
-
-            }
-        )
-    })
-    console.log(blockOutput)
-    return blockOutput
-}
-
-export const normalizeScript = (scriptOutput) => {
-    if (!Array.isArray(scriptOutput)) {
-        return
-    }
-
-    return scriptOutput.flat(Infinity).filter((entry) => {
-        return entry && typeof entry === "object" && !Array.isArray(entry)
-    })
 }

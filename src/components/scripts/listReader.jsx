@@ -1,27 +1,24 @@
-const suggestionsReader = (allVals) => {
+const listReader = (allVals) => {
     console.log("allVals: ", allVals)
+
     return (
         [
             {
-                lines: [
-                    `In that case, how about ${allVals.suggestedAct}?`
-                ],
+                line: `In that case, how about ${allVals.suggestionTemp}?`,
                 jump: "outOfOptions",
                 choices: [
                     {
                         choice: "Hm, maybe something else?",
-                        loop: "suggestedAct"
+                        loop: "suggestionTemp"
                     },
                     {
                         choice: "Sure, I'll do that!",
-                        set: ["currentlyDoing", allVals.suggestedAct]
+                        set: ["currentlyDoing", allVals.suggestionTemp]
                     },
                 ]
             },
             {
-                lines: [
-                    "That's great to hear! Come tell me when you're done, alright?"
-                ],
+                line: "That's great to hear! Come tell me when you're done, alright?",
                 face: "pleased",
                 choices: [
                     {
@@ -35,4 +32,4 @@ const suggestionsReader = (allVals) => {
 }
 
 
-export default suggestionsReader
+export default listReader

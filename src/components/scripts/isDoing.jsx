@@ -3,9 +3,7 @@ const isDoing = (allVals) => {
     return (
         [
             {
-                lines: [
-                    `How's it going? Are you still busy with ${allVals}?`
-                ],
+                line: `How's it going? Are you still busy with ${allVals}?`,
 
                 choices: [
                     {

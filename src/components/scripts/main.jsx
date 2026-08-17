@@ -5,7 +5,7 @@ const main = (allVals) => {
         return (
             [
                 {
-                    lines: [`Last I heard, you were ${allVals.currentlyDoing}. How's that going?`],
+                    line: `Last I heard, you were ${allVals.currentlyDoing}. How's that going?`,
                     face: "def",
                     choices: [
                         {
@@ -28,7 +28,7 @@ const main = (allVals) => {
     } else return (
         [
             {
-                lines: [`How are you feeling? Are you up to anything?`],
+                line: `How are you feeling? Are you up to anything?`,
                 face: "def",
                 choices: [
                     {
@@ -41,7 +41,8 @@ const main = (allVals) => {
                     },
                     {
                         choice: "Can you suggest something for me to do?",
-                        jump: "suggestActivity"
+                        jump: "listLanding",
+                        set: ["list", "activities"]
                     },
                     {
                         choice: "I'm in a thought spiral, help...",

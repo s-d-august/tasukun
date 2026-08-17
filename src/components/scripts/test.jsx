@@ -2,9 +2,8 @@ const test = (allVals) => {
     return (
         [
             {
-                lines: [
-                    `TEST: ${allVals.currentlyDoing}`
-                ],
+                line:
+                    `TEST: ${allVals.currentlyDoing}`,
 
                 choices: [
                     {

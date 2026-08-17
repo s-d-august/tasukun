@@ -1,10 +1,10 @@
-import activitiesList from "./activititesList";
+import activitiesList from "./activitiesList";
 import remindersList from "./remindersList";
 
 const lists =
 {
-    activitiesList,
-    remindersList
+    activities: activitiesList,
+    reminders: remindersList
 }
 
 

@@ -3,9 +3,9 @@ import isDoing from "./isDoing"
 import main from "./main"
 import outOfOptions from "./outOfOptions"
 import quit from "./quit"
-import suggestActivity from "./suggestActivity"
+import listLanding from "./listLanding"
 import suggestDistraction from "./suggestDistraction"
-import suggestionsReader from "./suggestionsReader"
+import listReader from "./listReader"
 import test from "./test"
 import thoughtSpiral from "./thoughtSpiral"
 
@@ -16,9 +16,9 @@ const scripts =
     main,
     outOfOptions,
     quit,
-    suggestActivity,
-    suggestActivity,
-    suggestionsReader,
+    listLanding,
+    listLanding,
+    listReader,
     test,
     thoughtSpiral,
 }
