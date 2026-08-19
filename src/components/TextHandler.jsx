@@ -100,7 +100,7 @@ const TextHandler = () => {
             }
 
             if (el.dropdown) {
-                return dropdown(el.dropdown, el.set, el.choice, clickHandler)
+                return dropdown(el.dropdown, el.set, el.choice, clickHandler, el.jump)
             }
 
             return (
@@ -120,26 +120,51 @@ const TextHandler = () => {
         return choicesClean;
     }
 
-    function scriptJump(jump, line) {
+    function scriptJump(jump) {
 
-        const scriptEntry = jump
+        const ifArray = Array.isArray(jump)
 
-        console.log("jump", scriptEntry)
-        if (!scriptEntry) {
+        console.log("jump", jump)
+        if (!jump) {
             //    console.log(jump, "Script not found!")
             return;
         }
-        setCurrentScript(scriptEntry);
-        setCurrentLine(line || 0);
+        setCurrentScript(ifArray ? jump[0] : jump);
+        setCurrentLine(ifArray ? jump[1] : 0);
     }
 
     function clickHandler(event) {
         const { jump, reset, set } = event.currentTarget.dataset;
 
+        function setTodo(vals) {
+            const normalized = Array.isArray(vals) ? vals : [vals]
+            console.log("set todo", vals, normalized)
+            localStorage.setItem("todo", JSON.stringify(normalized))
+        }
+        function setDone(vals) {
+            const normalized = Array.isArray(vals) ? vals : [vals]
+            console.log("set done", vals, normalized)
+            localStorage.setItem("done", JSON.stringify(normalized))
+        }
+
         function applySet(parsedSet) {
             if (!Array.isArray(parsedSet)) return
 
-            var doing = parsedSet[1]
+            var doing
+
+            console.log("parsedSet: ", parsedSet)
+
+            if (parsedSet[1] === "getChecked") {
+                let selectedItems = [];
+                let checkboxes = document.querySelectorAll(
+                    'input[type=checkbox]:checked');
+                checkboxes.forEach(function (checkbox) {
+                    selectedItems.push(checkbox.value);
+                });
+                alert("Selected items: " + selectedItems.join(', '));
+                doing = selectedItems
+            } else doing = parsedSet[1]
+
             if (parsedSet[0] === "currentlyDoing") {
                 setCurrentlyDoing(doing);
                 localStorage.setItem("currentlyDoing", doing)
@@ -149,26 +174,19 @@ const TextHandler = () => {
                 setListSub(doing)
             } else if (parsedSet[0] === "list") {
                 setCurrentList(doing)
+            } else if (parsedSet[0] === "setTodo") {
+                setTodo(doing)
+            } else if (parsedSet[0] === "setDone") {
+                setDone(doing)
             }
         }
 
         if (set) {
-            console.log("set", set)
-
-            if (typeof set === "function") {
-                let selectedItems = [];
-                let checkboxes = document.querySelectorAll(
-                    'input[type=checkbox]:checked');
-                checkboxes.forEach(function (checkbox) {
-                    selectedItems.push(checkbox.value);
-                });
-                alert("Selected items: " + selectedItems.join(', '));
-                set(selectedItems)
-                return
-            }
 
             try {
                 const parsedSet = JSON.parse(set);
+
+                console.log("parsedSet", parsedSet)
 
                 if (Array.isArray(parsedSet) && Array.isArray(parsedSet[0])) {
                     parsedSet.forEach(applySet)
@@ -176,6 +194,7 @@ const TextHandler = () => {
                     applySet(parsedSet)
                 }
             } catch {
+                applySet(set.split(","))
                 console.log("Invalid set payload", set);
             }
         }

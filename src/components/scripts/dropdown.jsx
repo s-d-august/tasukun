@@ -1,7 +1,7 @@
 import * as utils from "../utils"
 import "./dropdown.css"
 
-const dropdown = (list, setter, choice, handler) => {
+const dropdown = (list, setter, choice, handler, jump) => {
 
     const listCompiled = Object.entries(list)
         .filter(([key, value]) => utils.notString(value))
@@ -43,7 +43,7 @@ const dropdown = (list, setter, choice, handler) => {
                 </div>
             </div>
 
-            <button onClick={handler} className="submit-btn">Submit</button>
+            <button onClick={handler} className="submit-btn" data-jump={jump} data-set={setter}>Submit</button>
         </div>
 
 

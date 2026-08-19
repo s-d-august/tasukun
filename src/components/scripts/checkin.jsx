@@ -11,15 +11,6 @@ const checkin = (allVals) => {
     */
     const plans = localStorage.getItem("checkin") === "null" ? null : localStorage.getItem("checkin")
 
-    function setTodo(vals) {
-        const normalized = Array.isArray(vals) ? vals : [vals]
-        localStorage.setItem("todo", JSON.stringify(normalized))
-    }
-    function setDone(vals) {
-        const normalized = Array.isArray(vals) ? vals : [vals]
-        localStorage.setItem("done", JSON.stringify(normalized))
-    }
-
     function readStoredList(list) {
         const raw = localStorage.getItem(list)
         if (!raw) return []
@@ -35,16 +26,17 @@ const checkin = (allVals) => {
         return []
     }
 
-    function getLocalVals() {
+    function getReplyString() {
         const todoItems = readStoredList("todo")
         const doneItems = readStoredList("done")
 
         var todoString = todoItems.length ? `'re planning on ${todoItems.join(" and ")}` : ""
         var doneString = doneItems.length ? ` already ${doneItems.join(" and ")}` : ""
-        var isAnd = (todoString && doneString) ? ` and ` : ""
-        var endString = (todoString?.length + doneString?.length) > 3 ? `? That's a lot! I'm impressed!`
-            : (todoString?.length) > 2 ? `? You've got a lot to do! I believe in you!`
-                : (doneString?.length) > 2 ? `? You've been busy! I'm so proud of you!`
+        var isAnd = (todoItems && doneString) ? `, and ` : ""
+        console.log("length sum", todoItems?.length + doneItems?.length)
+        var endString = (todoItems?.length + doneItems?.length) > 3 ? `? That's a lot! I'm impressed!`
+            : (todoItems?.length) > 2 ? `? You've got a lot to do! I believe in you!`
+                : (doneItems?.length) > 2 ? `? You've been busy! I'm so proud of you!`
                     : `? That's wonderful to hear!`
 
         return (
@@ -52,7 +44,7 @@ const checkin = (allVals) => {
         )
     }
 
-    console.log(getLocalVals())
+    console.log(getReplyString())
 
 
     if (!plans) {
@@ -69,17 +61,17 @@ const checkin = (allVals) => {
                         {
                             choice: "I'm planning on...",
                             dropdown: activitiesList,
-                            set: setTodo
+                            set: ["setTodo", "getChecked"]
                         },
                         {
                             choice: "I already finished...",
                             dropdown: activitiesList,
-                            set: setDone
+                            set: ["setDone", "getChecked"]
                         },
                     ]
                 },
                 {
-                    line: `Tell me -- what are your plans for the day?`,
+                    line: getReplyString(),
 
                     choices: [
                         {
@@ -87,14 +79,16 @@ const checkin = (allVals) => {
                             jump: "listLanding"
                         },
                         {
-                            choice: "I'm planning on...",
+                            choice: "I'm also planning on...",
                             dropdown: activitiesList,
-                            set: setTodo
+                            set: ["setTodo", "getChecked"],
+                            jump: ["checkin", 1]
                         },
                         {
-                            choice: "I already finished...",
+                            choice: "I also already finished...",
                             dropdown: activitiesList,
-                            set: setDone
+                            set: ["setDone", "getChecked"],
+                            jump: ["checkin", 1]
                         },
                     ]
                 },
