@@ -58,7 +58,7 @@ const main = (allVals) => {
                     },
                     {
                         choice: "TEST",
-                        jump: "test"
+                        jump: "checkin"
                     },
                 ]
             },

@@ -24,3 +24,11 @@ export const findList = (currentList, listType, listSub) => {
 
 
 }
+
+export const notString = (obj) => {
+    return (typeof obj !== "string")
+}
+
+export const isString = (obj) => {
+    return (typeof obj == "string")
+}

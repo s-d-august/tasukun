@@ -1,3 +1,4 @@
+import checkin from "./checkin"
 import done from "./done"
 import isDoing from "./isDoing"
 import main from "./main"
@@ -11,6 +12,7 @@ import thoughtSpiral from "./thoughtSpiral"
 
 const scripts =
 {
+    checkin,
     done,
     isDoing,
     main,
