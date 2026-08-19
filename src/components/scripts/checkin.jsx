@@ -1,14 +1,9 @@
 
 import activitiesList from "../lists/activitiesList"
+import { pastTense } from "../utils"
 
 const checkin = (allVals) => {
-    /*
-    localStorage formatting:
-    [
-    {"todo":"work, cook"}
-    {"done":"draw"}
-    ]
-    */
+
     const plans = localStorage.getItem("checkin") === "null" ? null : localStorage.getItem("checkin")
 
     function readStoredList(list) {
@@ -32,15 +27,14 @@ const checkin = (allVals) => {
 
         var todoString = todoItems.length ? `'re planning on ${todoItems.join(" and ")}` : ""
         var doneString = doneItems.length ? ` already ${doneItems.join(" and ")}` : ""
-        var isAnd = (todoItems && doneString) ? `, and ` : ""
-        console.log("length sum", todoItems?.length + doneItems?.length)
+        var isAnd = (todoString && doneString) ? `, and you` : ""
         var endString = (todoItems?.length + doneItems?.length) > 3 ? `? That's a lot! I'm impressed!`
             : (todoItems?.length) > 2 ? `? You've got a lot to do! I believe in you!`
                 : (doneItems?.length) > 2 ? `? You've been busy! I'm so proud of you!`
                     : `? That's wonderful to hear!`
 
         return (
-            `So you` + todoString + isAnd + doneString + endString
+            `So you` + todoString + isAnd + pastTense(doneString) + endString
         )
     }
 
@@ -75,7 +69,7 @@ const checkin = (allVals) => {
 
                     choices: [
                         {
-                            choice: "Nothing just yet. Can you suggest something?",
+                            choice: "Can you suggest something else too?",
                             jump: "listLanding"
                         },
                         {

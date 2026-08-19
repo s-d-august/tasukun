@@ -32,3 +32,26 @@ export const notString = (obj) => {
 export const isString = (obj) => {
     return (typeof obj == "string")
 }
+
+export const pastTense = (str) => {
+    const words = {
+        'goed': 'went',
+        'tidyed': 'tidied',
+        'writed': 'wrote',
+        "readed": "read"
+    };
+
+    const withEd = str.replace(/\b(\w+?)ing\b/gi, (_match, stem) => `${stem}ed`);
+    const output = withEd.replace(/\b([a-z']+)\b/gi, (word) => {
+        const replacement = words[word.toLowerCase()]
+        if (!replacement) return word
+
+        if (word[0] === word[0].toUpperCase()) {
+            return replacement.charAt(0).toUpperCase() + replacement.slice(1)
+        }
+
+        return replacement
+    });
+    console.log(output);
+    return output
+}
