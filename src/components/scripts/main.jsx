@@ -38,15 +38,6 @@ const main = (allVals) => {
                         jump: "checkin"
                     },
                     {
-                        choice: "I'm feeling capable -- give me a task!",
-                        jump: "task"
-                    },
-                    {
-                        choice: "Can you suggest something for me to do?",
-                        jump: "listLanding",
-                        set: ["list", "activities"]
-                    },
-                    {
                         choice: "I'm in a thought spiral, help...",
                         jump: "thoughtSpiral"
                     },
@@ -55,12 +46,8 @@ const main = (allVals) => {
                         jump: "encouragement"
                     },
                     {
-                        choice: "I did something praiseworthy~",
-                        jump: "praise"
-                    },
-                    {
                         choice: "TEST",
-                        jump: "checkin"
+                        jump: ""
                     },
                 ]
             },

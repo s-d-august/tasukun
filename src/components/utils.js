@@ -78,8 +78,6 @@ export const whatTime = () => {
 
     let string = `Good ${timeOfDay}! It's ${hm} on ${cDay}, ${dmy}.`
 
-    console.log(string)
-
     return (
         {
             full: currentDate,
@@ -98,4 +96,17 @@ export const whatTime = () => {
 
 }
 
-console.log(whatTime())
+export const readStoredList = (list) => {
+    const raw = localStorage.getItem(list)
+    if (!raw) return []
+
+    try {
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed)) return parsed
+        if (typeof parsed === "string") return [parsed]
+    } catch {
+        return raw.split(",").map((item) => item.trim()).filter(Boolean)
+    }
+
+    return []
+}
