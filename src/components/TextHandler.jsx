@@ -147,38 +147,32 @@ const TextHandler = () => {
             localStorage.setItem("done", JSON.stringify(normalized))
         }
 
+        function getCheckedItems() {
+            return Array.from(document.querySelectorAll('input[type=checkbox]:checked'), (checkbox) => checkbox.value)
+        }
+
         function applySet(parsedSet) {
             if (!Array.isArray(parsedSet)) return
 
-            var doing
+            const [action, value] = parsedSet
 
             console.log("parsedSet: ", parsedSet)
 
-            if (parsedSet[1] === "getChecked") {
-                let selectedItems = [];
-                let checkboxes = document.querySelectorAll(
-                    'input[type=checkbox]:checked');
-                checkboxes.forEach(function (checkbox) {
-                    selectedItems.push(checkbox.value);
-                });
-                alert("Selected items: " + selectedItems.join(', '));
-                doing = selectedItems
-            } else doing = parsedSet[1]
+            const doing = value === "getChecked" ? getCheckedItems() : value
 
-            if (parsedSet[0] === "currentlyDoing") {
-                setCurrentlyDoing(doing);
-                localStorage.setItem("currentlyDoing", doing)
-            } else if (parsedSet[0] === "type") {
-                setListType(doing)
-            } else if (parsedSet[0] === "sub") {
-                setListSub(doing)
-            } else if (parsedSet[0] === "list") {
-                setCurrentList(doing)
-            } else if (parsedSet[0] === "setTodo") {
-                setTodo(doing)
-            } else if (parsedSet[0] === "setDone") {
-                setDone(doing)
+            const actions = {
+                currentlyDoing: (nextValue) => {
+                    setCurrentlyDoing(nextValue)
+                    localStorage.setItem("currentlyDoing", nextValue)
+                },
+                type: setListType,
+                sub: setListSub,
+                list: setCurrentList,
+                setTodo,
+                setDone,
             }
+
+            actions[action]?.(doing)
         }
 
         if (set) {

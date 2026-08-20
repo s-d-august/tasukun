@@ -1,3 +1,5 @@
+import * as utils from "../utils"
+
 const main = (allVals) => {
     console.log(allVals)
     if (allVals.currentlyDoing) {
@@ -28,12 +30,12 @@ const main = (allVals) => {
     } else return (
         [
             {
-                line: `How are you feeling? Are you up to anything?`,
+                line: `${utils.whatTime().string} It's great to see you!`,
                 face: "def",
                 choices: [
                     {
-                        choice: "I am, actually, let me tell you!",
-                        jump: "setActivity"
+                        choice: "I'm here to check in!",
+                        jump: "checkin"
                     },
                     {
                         choice: "I'm feeling capable -- give me a task!",

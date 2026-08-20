@@ -55,3 +55,47 @@ export const pastTense = (str) => {
     console.log(output);
     return output
 }
+
+export const whatTime = () => {
+    function dayOfWeek(day) {
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        return daysOfWeek[day]
+    }
+
+    let currentDate = new Date();
+    let cDay = dayOfWeek(currentDate.getDay())
+    let cDate = currentDate.getDate()
+    let cMonth = currentDate.getMonth() + 1
+    let cYear = currentDate.getFullYear()
+    let cHour = currentDate.getHours()
+    let cMinute = currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes()
+    let cSecond = currentDate.getSeconds()
+    let dmy = cMonth + "/" + cDate + "/" + cYear
+    let hm = cHour + ":" + cMinute
+
+    let timeOfDay = (cHour < 12) ? "morning" :
+        (cHour < 17) ? "afternoon" : "evening"
+
+    let string = `Good ${timeOfDay}! It's ${hm} on ${cDay}, ${dmy}.`
+
+    console.log(string)
+
+    return (
+        {
+            full: currentDate,
+            day: cDay,
+            date: cDate,
+            dmy,
+            month: cMonth,
+            year: cYear,
+            hour: cHour,
+            minute: cMinute,
+            second: cSecond,
+            string,
+            tod: timeOfDay
+        }
+    )
+
+}
+
+console.log(whatTime())
