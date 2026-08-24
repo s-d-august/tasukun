@@ -38,7 +38,7 @@ const dropdown = (list, setter, choice, handler, jump) => {
             <div className="dropdown">
                 <div className="dropdown-label">{choice}</div>
                 <button className="dropbtn">Select Items</button>
-                <div className="dropdown-content">
+                <div className="dropdown-content" id={setter[0]}>
                     {listCompiled}
                 </div>
             </div>

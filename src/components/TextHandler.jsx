@@ -24,6 +24,7 @@ const TextHandler = () => {
     // The line TSK is on (not assembled)
     const [displayLine, setDisplayLine] = useState()
     // The assembled currentLine
+    const [contentVersion, setContentVersion] = useState(0)
 
     const [currentExpression, setCurrentExpression] = useState("def")
 
@@ -52,7 +53,7 @@ const TextHandler = () => {
     useEffect(() => {
         scriptsHistory.current = [(currentScript), ...scriptsHistory.current]
     }, [currentScript])
-    // Updates script history (stored as function) when script changes
+    // Updates script history (stored as name string) when script changes
 
     useEffect(() => {
         const assembledScript = getScriptLines()[currentLine]
@@ -71,7 +72,7 @@ const TextHandler = () => {
             setCurrentExpression(assembledScript.face)
         }
 
-    }, [currentLine, currentScript])
+    }, [currentLine, currentScript, contentVersion])
 
     function choiceDisplay(choices) {
         // expecting an array of objects
@@ -122,58 +123,22 @@ const TextHandler = () => {
 
     function scriptJump(jump) {
 
-        const ifArray = Array.isArray(jump)
+        const parsed = jump.split(",")
+        const ifArray = parsed.length > 1
 
-        console.log("jump", jump)
         if (!jump) {
-            //    console.log(jump, "Script not found!")
+            console.log(jump, "Script not found!")
             return;
         }
-        setCurrentScript(ifArray ? jump[0] : jump);
-        setCurrentLine(ifArray ? jump[1] : 0);
+        if (currentScript === (parsed[0] || jump)) {
+            scriptsHistory.current = [(currentScript), ...scriptsHistory.current]
+        }
+        setCurrentScript(ifArray ? parsed[0] : jump);
+        setCurrentLine(ifArray ? parsed[1] : 0);
     }
 
     function clickHandler(event) {
         const { jump, reset, set } = event.currentTarget.dataset;
-
-        function setTodo(vals) {
-            const normalized = Array.isArray(vals) ? vals : [vals]
-            console.log("set todo", vals, normalized)
-            localStorage.setItem("todo", JSON.stringify(normalized))
-        }
-        function setDone(vals) {
-            const normalized = Array.isArray(vals) ? vals : [vals]
-            console.log("set done", vals, normalized)
-            localStorage.setItem("done", JSON.stringify(normalized))
-        }
-
-        function getCheckedItems() {
-            return Array.from(document.querySelectorAll('input[type=checkbox]:checked'), (checkbox) => checkbox.value)
-        }
-
-        function applySet(parsedSet) {
-            if (!Array.isArray(parsedSet)) return
-
-            const [action, value] = parsedSet
-
-            console.log("parsedSet: ", parsedSet)
-
-            const doing = value === "getChecked" ? getCheckedItems() : value
-
-            const actions = {
-                currentlyDoing: (nextValue) => {
-                    setCurrentlyDoing(nextValue)
-                    localStorage.setItem("currentlyDoing", nextValue)
-                },
-                type: setListType,
-                sub: setListSub,
-                list: setCurrentList,
-                setTodo,
-                setDone,
-            }
-
-            actions[action]?.(doing)
-        }
 
         if (set) {
 
@@ -183,17 +148,14 @@ const TextHandler = () => {
                 console.log("parsedSet", parsedSet)
 
                 if (Array.isArray(parsedSet) && Array.isArray(parsedSet[0])) {
-                    parsedSet.forEach(applySet)
+                    parsedSet.forEach(utils.applySet)
                 } else {
-                    applySet(parsedSet)
+                    utils.applySet(parsedSet)
                 }
             } catch {
-                applySet(set.split(","))
-                console.log("Invalid set payload", set);
+                utils.applySet(set.split(","))
             }
         }
-
-
 
         if (reset) {
             console.log("script from history", scriptsHistory.current[1])
@@ -214,6 +176,11 @@ const TextHandler = () => {
             setCurrentLine(nextLine);
             setDisplayChoices(scriptLines[nextLine].choices);
         }
+
+        document.querySelectorAll('input[type=checkbox]:checked').forEach((checkbox) => {
+            checkbox.checked = false
+        })
+        setContentVersion((version) => version + 1)
     }
 
 

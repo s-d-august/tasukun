@@ -4,16 +4,35 @@ import * as utils from "../utils"
 
 const checkin = (allVals) => {
 
+    console.log(allVals, allVals.scriptsHistory)
+
     const prevCheckin = localStorage.getItem("checkin date")
-    localStorage.setItem("checkin date", utils.whatTime().date)
-    const nowCheckin = localStorage.getItem("checkin date")
+    const nowCheckin = utils.whatTime().dmy
+    localStorage.setItem("checkin date", nowCheckin)
 
     const todoItems = utils.readStoredList("todo")
     const doneItems = utils.readStoredList("done")
     const sumLength = (todoItems?.length + doneItems?.length)
 
+    function storeOldVals() {
+        if (prevCheckin !== nowCheckin) {
+
+            const oldVals = {
+                todo: todoItems,
+                done: doneItems
+            }
+
+            localStorage.setItem(prevCheckin, JSON.stringify(oldVals))
+            localStorage.setItem("todo", [])
+            localStorage.setItem("done", [])
+        }
+    }
+
+    storeOldVals()
+
     function getReplyString() {
 
+        var introstring = (allVals.scriptsHistory[1] !== "checkin") ? "Last we spoke, you said you" : "So you"
         var todoString = todoItems.length ? `'re planning on ${todoItems.join(" and ")}` : ""
         var doneString = doneItems.length ? ` already ${doneItems.join(" and ")}` : ""
         var isAnd = (todoString && doneString) ? `, and you` : ""
@@ -25,7 +44,7 @@ const checkin = (allVals) => {
         if (sumLength < 1) {
             return `Tell me -- what are your plans for the day?`
         } else return (
-            `So you` + todoString + isAnd + utils.pastTense(doneString) + endString
+            introstring + todoString + isAnd + utils.pastTense(doneString) + endString
         )
     }
 
@@ -58,13 +77,13 @@ const checkin = (allVals) => {
                     {
                         choice: `I'm${isAlso()} planning on...`,
                         dropdown: activitiesList,
-                        set: ["setTodo", "getChecked"],
+                        set: ["todo", "getChecked"],
                         jump: ["checkin", 0]
                     },
                     {
                         choice: `I${isAlso()} already finished...`,
                         dropdown: activitiesList,
-                        set: ["setDone", "getChecked"],
+                        set: ["done", "getChecked"],
                         jump: ["checkin", 0]
                     },
                     {

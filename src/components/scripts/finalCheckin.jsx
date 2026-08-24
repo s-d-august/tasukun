@@ -4,22 +4,28 @@ const finalCheckin = (allVals) => {
 
     const todoItems = utils.readStoredList("todo")
     const doneItems = utils.readStoredList("done")
-    const sumLength = (todoItems?.length + doneItems?.length)
+    const todoNum = todoItems?.length
+    const doneNum = doneItems?.length
+    const sumLength = (todoNum + doneNum)
 
     localStorage.setItem(utils.whatTime().dmy, { "todo": todoItems, "done": doneItems })
 
     function getLine() {
-        var todoString = todoItems?.length ? ` planned on ${todoItems.join(" and ")}` : ""
-        var doneString = doneItems?.length ? ` ${doneItems.join(" and ")}` : ""
+        var todoString = todoNum ? ` planned on ${todoItems.join(" and ")}` : ""
+        var doneString = doneNum ? ` ${doneItems.join(" and ")}` : ""
         var isAnd = (todoString && doneString) ? `, and you` : ""
-        var endString = (doneItems?.length === 0) ? ` didn't get much done, huh? That's okay -- sometimes you need to rest.`
-            : (sumLength) > 3 ? `? That's a lot! I'm impressed!`
-                : (todoItems?.length) > 2 ? `? You've got a lot to do! I believe in you!`
-                    : (doneItems?.length) > 2 ? `. You got a lot done! That's great!`
-                        : `? That's wonderful to hear!`
+        var endTodo = (todoNum === 0) ? `. You didn't make any plans`
+            : (todoNum > 2) ? `. You had a lot planned`
+                : ". You had some plans"
+
+        var joiner = (todoString < doneString || todoString > doneString) ? `, but ` : `, and `
+
+        var endDone = (doneNum === 0) ? `you didn't get much done, huh?`
+            : (doneNum) > 2 ? `you did a lot!`
+                : `you got some stuff done.`
 
         return (
-            `Let me see... Today, you` + todoString + isAnd + utils.pastTense(doneString) + endString
+            `Let me see... Today, you` + todoString + isAnd + utils.pastTense(doneString) + endTodo + joiner + endDone
         )
     }
 

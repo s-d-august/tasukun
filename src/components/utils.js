@@ -38,7 +38,10 @@ export const pastTense = (str) => {
         'goed': 'went',
         'tidyed': 'tidied',
         'writed': 'wrote',
-        "readed": "read"
+        "readed": "read",
+        "thed": "thing",
+        "somethed": "something",
+        "drawed": "drawing"
     };
 
     const withEd = str.replace(/\b(\w+?)ing\b/gi, (_match, stem) => `${stem}ed`);
@@ -98,6 +101,8 @@ export const whatTime = () => {
 
 export const readStoredList = (list) => {
     const raw = localStorage.getItem(list)
+
+    console.log("stored list", raw)
     if (!raw) return []
 
     try {
@@ -109,4 +114,48 @@ export const readStoredList = (list) => {
     }
 
     return []
+}
+
+export const setVals = (key, vals) => {
+    const normalized = Array.isArray(vals) ? vals : [vals]
+    const prev = JSON.parse(localStorage.getItem(key)) || []
+    normalized.forEach((el) => {
+        if (prev.includes(el)) {
+            return
+        } else prev.push(el)
+    })
+    localStorage.setItem(key, JSON.stringify(prev))
+}
+
+export const setDone = (vals) => {
+    const normalized = Array.isArray(vals) ? vals : [vals]
+    console.log("set done", vals, normalized)
+    const prev = localStorage.getItem("done")
+    localStorage.setItem("done", JSON.stringify(prev.concat(normalized)))
+}
+
+export const storeVals = (day, vals) => {
+    const normalized = Array.isArray(vals) ? vals : [vals]
+    console.log("set done", vals, normalized)
+    localStorage.setItem(day, JSON.stringify(normalized))
+}
+
+export const getCheckedItems = (location) => {
+    console.log("location", location)
+    return Array.from(
+        document.querySelectorAll('input[type=checkbox]:checked'),
+        (checkbox) => checkbox.closest(`#${CSS.escape(location)}`) ? checkbox.value : null
+    ).filter(Boolean) // clears null values
+}
+
+export const applySet = (parsedSet) => {
+    if (!Array.isArray(parsedSet)) return
+
+    const [key, value] = parsedSet
+
+    console.log("parsedSet: ", parsedSet)
+
+    const doing = value === "getChecked" ? getCheckedItems(key) : value
+
+    setVals(key, doing)
 }
