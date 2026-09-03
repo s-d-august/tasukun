@@ -1,8 +1,10 @@
 const activitiesList =
 // type string formatted as "I want something..."
 {
+    listName: "activities",
     ask: "I'm so glad you asked! What do you feel up for?",
     move: {
+        listName: "move",
         type: "Something that gets me moving!",
         all: [
             "going for a walk",
@@ -12,6 +14,8 @@ const activitiesList =
 
     },
     nomove: {
+        listName: "nomove",
+        topList: "activities",
         type: "Nothing too active.",
         focus: [
             "writing film reviews",
@@ -29,6 +33,7 @@ const activitiesList =
     },
     listen:
     {
+        listName: "listen",
         type: "Something to listen to.",
         all: [
             "Bandcamp Daily albums",

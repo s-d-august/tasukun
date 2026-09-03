@@ -30,15 +30,12 @@ const TextHandler = () => {
 
     const [currentList, setCurrentList] = useState()
     // The list that's currently being read from
-    const [listType, setListType] = useState()
-    const [listSub, setListSub] = useState()
-    const [suggestionTemp, setSuggestedAct] = useState()
-    // The currently suggested activity
-    const optionsArray = useRef()
-    // The selection of choices to iterate through
+
+
 
     const getAllVals = () => ({
         currentLine,
+        currentList,
         currentlyDoing,
         currentScript,
         displayChoices,
@@ -75,6 +72,8 @@ const TextHandler = () => {
     }, [currentLine, currentScript, contentVersion])
 
     function choiceDisplay(choices) {
+
+        console.log("choices", choices)
         // expecting an array of objects
 
         if (!choices) {
@@ -107,7 +106,7 @@ const TextHandler = () => {
             return (
                 <Button
                     key={index}
-                    data-loop={el.loop}
+                    data-list={el.list}
                     data-jump={el.jump ? el.jump : jumpTarget}
                     data-reset={el.reset}
                     data-set={el.set ? JSON.stringify(el.set) : ""}
@@ -138,7 +137,7 @@ const TextHandler = () => {
     }
 
     function clickHandler(event) {
-        const { jump, reset, set } = event.currentTarget.dataset;
+        const { jump, reset, set, list } = event.currentTarget.dataset;
 
         if (set) {
 
@@ -155,6 +154,10 @@ const TextHandler = () => {
             } catch {
                 utils.applySet(set.split(","))
             }
+        }
+
+        if (list) {
+            setCurrentList(list)
         }
 
         if (reset) {

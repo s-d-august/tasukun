@@ -19,7 +19,6 @@ const scripts =
     outOfOptions,
     quit,
     listLanding,
-    listLanding,
     listReader,
     test,
     thoughtSpiral,

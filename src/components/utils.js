@@ -9,9 +9,9 @@ export const shuffleArray = (arr) => {
     } else return
 }
 
-export const findList = (currentList, listType, listSub) => {
+export const findList = ({ currentList, listType, listSub }) => {
 
-    console.log(currentList, listType, listSub)
+    console.log("findList", currentList, listType, listSub)
 
     const baseList = lists[currentList]
     if (!baseList) return undefined
@@ -75,11 +75,16 @@ export const whatTime = () => {
     let cSecond = currentDate.getSeconds()
     let dmy = cMonth + "/" + cDate + "/" + cYear
     let hm = cHour + ":" + cMinute
+    let ampm
+
+    if (cHour > 12) {
+        ampm = (cHour - 12) + ":" + cMinute + " PM"
+    } else ampm = cHour + ":" + cMinute + " AM"
 
     let timeOfDay = (cHour < 12) ? "morning" :
         (cHour < 17) ? "afternoon" : "evening"
 
-    let string = `Good ${timeOfDay}! It's ${hm} on ${cDay}, ${dmy}.`
+    let string = `Good ${timeOfDay}! It's ${ampm} on ${cDay}, ${dmy}.`
 
     return (
         {
@@ -102,7 +107,6 @@ export const whatTime = () => {
 export const readStoredList = (list) => {
     const raw = localStorage.getItem(list)
 
-    console.log("stored list", raw)
     if (!raw) return []
 
     try {
@@ -118,7 +122,7 @@ export const readStoredList = (list) => {
 
 export const setVals = (key, vals) => {
     const normalized = Array.isArray(vals) ? vals : [vals]
-    const prev = JSON.parse(localStorage.getItem(key)) || []
+    const prev = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : []
     normalized.forEach((el) => {
         if (prev.includes(el)) {
             return
@@ -129,33 +133,30 @@ export const setVals = (key, vals) => {
 
 export const setDone = (vals) => {
     const normalized = Array.isArray(vals) ? vals : [vals]
-    console.log("set done", vals, normalized)
     const prev = localStorage.getItem("done")
     localStorage.setItem("done", JSON.stringify(prev.concat(normalized)))
 }
 
 export const storeVals = (day, vals) => {
     const normalized = Array.isArray(vals) ? vals : [vals]
-    console.log("set done", vals, normalized)
     localStorage.setItem(day, JSON.stringify(normalized))
 }
 
 export const getCheckedItems = (location) => {
-    console.log("location", location)
     return Array.from(
         document.querySelectorAll('input[type=checkbox]:checked'),
         (checkbox) => checkbox.closest(`#${CSS.escape(location)}`) ? checkbox.value : null
     ).filter(Boolean) // clears null values
 }
 
-export const applySet = (parsedSet) => {
+export const applySet = (parsedSet, setter) => {
     if (!Array.isArray(parsedSet)) return
 
     const [key, value] = parsedSet
 
-    console.log("parsedSet: ", parsedSet)
-
     const doing = value === "getChecked" ? getCheckedItems(key) : value
 
-    setVals(key, doing)
+    if (setter) {
+        setter(doing)
+    } else setVals(key, doing)
 }

@@ -46,8 +46,11 @@ const main = (allVals) => {
                         jump: "encouragement"
                     },
                     {
-                        choice: "TEST",
-                        jump: ""
+                        choice: "Can you suggest something for me to do?",
+                        jump: "listLanding",
+                        list: JSON.stringify({
+                            currentList: "activities"
+                        })
                     },
                 ]
             },

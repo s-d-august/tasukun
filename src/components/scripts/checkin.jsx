@@ -8,18 +8,14 @@ const checkin = (allVals) => {
 
     const prevCheckin = localStorage.getItem("checkin date")
     const nowCheckin = utils.whatTime().dmy
-    localStorage.setItem("checkin date", nowCheckin)
-
-    const todoItems = utils.readStoredList("todo")
-    const doneItems = utils.readStoredList("done")
-    const sumLength = (todoItems?.length + doneItems?.length)
 
     function storeOldVals() {
+        console.log("checkin days", prevCheckin, nowCheckin)
         if (prevCheckin !== nowCheckin) {
 
             const oldVals = {
-                todo: todoItems,
-                done: doneItems
+                todo: utils.readStoredList("todo"),
+                done: utils.readStoredList("done")
             }
 
             localStorage.setItem(prevCheckin, JSON.stringify(oldVals))
@@ -29,6 +25,12 @@ const checkin = (allVals) => {
     }
 
     storeOldVals()
+
+    const todoItems = utils.readStoredList("todo")
+    const doneItems = utils.readStoredList("done")
+    const sumLength = (todoItems?.length + doneItems?.length)
+
+    localStorage.setItem("checkin date", nowCheckin)
 
     function getReplyString() {
 
