@@ -80,6 +80,23 @@ const TextHandler = () => {
         setListIndex(0)
     }, [currentList])
 
+
+    function scriptJump(jump) {
+
+        const parsed = jump.split(",")
+        const ifArray = parsed.length > 1
+
+        if (!jump) {
+            console.log(jump, "Script not found!")
+            return;
+        }
+        if (currentScript === (parsed[0] || jump)) {
+            scriptsHistory.current = [(currentScript), ...scriptsHistory.current]
+        }
+        setCurrentScript(ifArray ? parsed[0] : jump);
+        setCurrentLine(ifArray ? parsed[1] : 0);
+    }
+
     function choiceDisplay(choices) {
         // expecting an array of objects
 
@@ -117,6 +134,7 @@ const TextHandler = () => {
                     data-jump={el.jump ? el.jump : jumpTarget}
                     data-reset={el.reset}
                     data-set={el.set ? JSON.stringify(el.set) : ""}
+                    data-loop={el.loop}
                     className={jumpClass}
                     onClick={clickHandler}>
                     {el.choice}
@@ -127,21 +145,6 @@ const TextHandler = () => {
         return choicesClean;
     }
 
-    function scriptJump(jump) {
-
-        const parsed = jump.split(",")
-        const ifArray = parsed.length > 1
-
-        if (!jump) {
-            console.log(jump, "Script not found!")
-            return;
-        }
-        if (currentScript === (parsed[0] || jump)) {
-            scriptsHistory.current = [(currentScript), ...scriptsHistory.current]
-        }
-        setCurrentScript(ifArray ? parsed[0] : jump);
-        setCurrentLine(ifArray ? parsed[1] : 0);
-    }
 
     function clickHandler(event) {
         const { jump, reset, set, list, loop } = event.currentTarget.dataset;
@@ -167,6 +170,13 @@ const TextHandler = () => {
             setCurrentList(list)
         }
 
+        if (loop) {
+            console.log("loop", listIndex)
+            var number = listIndex + 1
+            setListIndex(number)
+
+        }
+
         if (reset) {
             console.log("script from history", scriptsHistory.current[1])
             setCurrentScript(() => scriptsHistory.current[1])
@@ -176,21 +186,21 @@ const TextHandler = () => {
         if (jump) {
             scriptJump(jump)
         } else {
-            const nextLine = currentLine + 1;
-            const scriptLines = getScriptLines()
+            if (loop) {
+                scriptJump(currentScript)
+            } else {
+                const nextLine = currentLine + 1;
+                const scriptLines = getScriptLines()
 
-            if (!scriptLines[nextLine]) {
-                console.log(currentScript, "Line not found!")
-                return
+                if (!scriptLines[nextLine]) {
+                    console.log(currentScript, "Line not found!")
+                    return
+                }
+                setCurrentLine(nextLine);
+                setDisplayChoices(scriptLines[nextLine].choices);
             }
-            setCurrentLine(nextLine);
-            setDisplayChoices(scriptLines[nextLine].choices);
-        }
-
-        if (loop) {
 
         }
-
         document.querySelectorAll('input[type=checkbox]:checked').forEach((checkbox) => {
             checkbox.checked = false
         })

@@ -9,8 +9,7 @@ const listReader = (allVals) => {
     return (
         [
             {
-                line: `In that case, how about ${allVals.suggestionTemp}?`,
-                jump: "outOfOptions",
+                line: `In that case, how about ${idea}?`,
                 choices: [
                     {
                         choice: "Hm, maybe something else?",
@@ -18,7 +17,7 @@ const listReader = (allVals) => {
                     },
                     {
                         choice: "Sure, I'll do that!",
-                        set: ["currentlyDoing", allVals.suggestionTemp]
+                        set: ["currentlyDoing", idea]
                     },
                 ]
             },
