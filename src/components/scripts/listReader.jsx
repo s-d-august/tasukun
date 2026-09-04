@@ -1,5 +1,10 @@
+import lists from "../lists/listsCompiled"
+import * as utils from "../utils"
+
 const listReader = (allVals) => {
     console.log("allVals: ", allVals)
+
+    var idea = allVals.listArray[allVals.listIndex]
 
     return (
         [

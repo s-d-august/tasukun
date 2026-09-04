@@ -28,10 +28,12 @@ const TextHandler = () => {
 
     const [currentExpression, setCurrentExpression] = useState("def")
 
-    const [currentList, setCurrentList] = useState()
+    const [currentList, setCurrentList] = useState("activities")
     // The list that's currently being read from
 
+    const [listArray, setListArray] = useState(utils.findList(currentList))
 
+    const [listIndex, setListIndex] = useState(0)
 
     const getAllVals = () => ({
         currentLine,
@@ -40,6 +42,8 @@ const TextHandler = () => {
         currentScript,
         displayChoices,
         displayLine,
+        listArray,
+        listIndex,
         scriptsHistory: scriptsHistory.current,
     })
 
@@ -69,11 +73,14 @@ const TextHandler = () => {
             setCurrentExpression(assembledScript.face)
         }
 
-    }, [currentLine, currentScript, contentVersion])
+    }, [currentLine, currentScript, contentVersion, listArray])
+
+    useEffect(() => {
+        setListArray(utils.findList(currentList))
+        setListIndex(0)
+    }, [currentList])
 
     function choiceDisplay(choices) {
-
-        console.log("choices", choices)
         // expecting an array of objects
 
         if (!choices) {
@@ -137,7 +144,7 @@ const TextHandler = () => {
     }
 
     function clickHandler(event) {
-        const { jump, reset, set, list } = event.currentTarget.dataset;
+        const { jump, reset, set, list, loop } = event.currentTarget.dataset;
 
         if (set) {
 
@@ -178,6 +185,10 @@ const TextHandler = () => {
             }
             setCurrentLine(nextLine);
             setDisplayChoices(scriptLines[nextLine].choices);
+        }
+
+        if (loop) {
+
         }
 
         document.querySelectorAll('input[type=checkbox]:checked').forEach((checkbox) => {

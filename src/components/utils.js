@@ -9,10 +9,15 @@ export const shuffleArray = (arr) => {
     } else return
 }
 
-export const findList = ({ currentList, listType, listSub }) => {
+export const findList = (vars) => {
 
-    console.log("findList", currentList, listType, listSub)
+    if (lists[vars]) {
+        return lists[vars]
+    }
 
+    console.log("findList", JSON.parse(vars))
+    const { currentList, listType, listSub } = JSON.parse(vars)
+    console.log("after parse", lists[currentList], listType, listSub)
     const baseList = lists[currentList]
     if (!baseList) return undefined
 

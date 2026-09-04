@@ -7,7 +7,7 @@ const ListLanding = (allVals) => {
 
     console.log("allVals", allVals)
 
-    const list = utils.findList(JSON.parse(allVals.currentList))
+    const list = allVals.listArray
 
     console.log("list", list, lists)
 
@@ -30,8 +30,6 @@ const ListLanding = (allVals) => {
 
     var taskieLine
     var choiceLine
-    var jump
-    var type
     var sub
 
     function writeLine(insert) {
@@ -49,33 +47,37 @@ const ListLanding = (allVals) => {
 
     function assembleChoice(key, value) {
 
-        if (list.ask) {
-            console.log("top-level")
-            // top-level
-            choiceLine = "preset"
+        console.log("assembleChoice", list, key, value)
 
-        } else if (list.type && !list.all) {
+        if (value.type && !value.all) {
             console.log("type with sub")
             // types with subcategories
             choiceLine = false
             sub = true
 
-        } else if (list.type && list.all) {
+        } else if (value.type && value.all) {
             console.log("type without sub")
             // types without subcategories
             sub = false
             choiceLine = "preset"
         }
 
+        if (list.ask) {
+            console.log("top-level")
+            // top-level
+            choiceLine = "preset"
+        } else if (!list.all) choiceLine = false
+
         return (
             {
                 choice: (choiceLine === "preset") ? value.type : writeLine(key),
                 list: JSON.stringify({
-                    currentList: sub ? value.topList : list.listName,
-                    listType: sub ? list.listName : value.listName,
-                    listSub: sub ? key : false
+                    currentList: list.topList ? list.topList : list.listName,
+                    listType: list.topList ? list.listName : key,
+                    listSub: list.topList ? key :
+                        sub ? null : "all"
                 }),
-                jump: (value.type && value.all) ? "listReader" : "listLanding",
+                jump: ((value.type && value.all) || list.topList) ? "listReader" : "listLanding",
 
             }
         )

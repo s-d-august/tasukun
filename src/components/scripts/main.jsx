@@ -48,9 +48,7 @@ const main = (allVals) => {
                     {
                         choice: "Can you suggest something for me to do?",
                         jump: "listLanding",
-                        list: JSON.stringify({
-                            currentList: "activities"
-                        })
+                        list: "activities"
                     },
                 ]
             },
